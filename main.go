@@ -6,6 +6,26 @@ import (
 	"time"
 )
 
+// Line represents a single coin toss for the IChing.
+type Line struct {
+	CoinFlips [3]string
+	Total     int
+}
+
+func (l *Line) toString() string {
+	switch l.Total {
+	case 6:
+		return "--X--"
+	case 7:
+		return "-----"
+	case 8:
+		return "-- --"
+	case 9:
+		return "--0--"
+	}
+	return "uninitialized"
+}
+
 func flipCoin() string {
 	rand.Seed(time.Now().UTC().UnixNano())
 	num := rand.Intn(2)
@@ -16,33 +36,17 @@ func flipCoin() string {
 }
 
 func main() {
-	i := 0
-	for i < 6 {
-		j := 0
-		total := 0
-		line := make([]string, 0)
-		for j < 3 {
+	for i := 0; i < 6; i++ {
+		var line Line
+		for j := 0; j < 3; j++ {
 			res := flipCoin()
-			line = append(line, res)
+			line.CoinFlips[j] = res
 			if res == "Tails" {
-				total += 2
+				line.Total += 2
 			} else {
-				total += 3
+				line.Total += 3
 			}
-			j++
 		}
-		if total == 6 {
-			fmt.Println("--X--")
-		} else if total == 7 {
-			fmt.Println("-----")
-		} else if total == 8 {
-			fmt.Println("-- --")
-		} else {
-			fmt.Println("--0--")
-		}
-
-		// fmt.Println(line)
-		// fmt.Println(total)
-		i++
+		fmt.Println(line.toString())
 	}
 }
